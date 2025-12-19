@@ -7,55 +7,53 @@ import Keyboard from "./components/Keyboard"
 function App() {
   const getWord = () => words[Math.floor(Math.random() * words.length)]
 
-  const [wordToGuess, setWordToGuess] = useState<string>(() => {
-    return words[Math.floor(Math.random() * words.length)]
-  })
+  const [wordToGuess, setWordToGuess] = useState<string>(() => getWord())
   const [guessedLetters, setGuessedLetters] = useState<string[]>([])
-  const inCorrectLetters = guessedLetters.filter(letter => !wordToGuess.includes(letter))
 
-  const isLoser = inCorrectLetters.length >= 6
-  const isWinner = wordToGuess.split("").every(letter => guessedLetters.includes(letter))
+  const incorrectLetters = guessedLetters.filter(
+    letter => !wordToGuess.includes(letter)
+  )
 
-  const addGuessedLetter = useCallback((letter: string) => {
-    if (guessedLetters.includes(letter) || isLoser || isWinner ) return
-    setGuessedLetters(prev => [...prev, letter])
-  }, [guessedLetters, isWinner, isLoser])
+  const isLoser = incorrectLetters.length >= 6
+  const isWinner = wordToGuess
+    .split("")
+    .every(letter => guessedLetters.includes(letter))
 
+  const addGuessedLetter = useCallback(
+    (letter: string) => {
+      if (guessedLetters.includes(letter) || isLoser || isWinner) return
+      setGuessedLetters(prev => [...prev, letter])
+    },
+    [guessedLetters, isLoser, isWinner]
+  )
+
+  /* Handle letter keys */
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       const key = e.key.toLowerCase()
-
       if (!key.match(/^[a-z]$/)) return
 
       e.preventDefault()
       addGuessedLetter(key)
     }
 
-    document.addEventListener("keypress", handler)
-    
-    return () => {
-      document.removeEventListener("keypress", handler)
-    }
-  }, [addGuessedLetter, guessedLetters])
+    document.addEventListener("keydown", handler)
+    return () => document.removeEventListener("keydown", handler)
+  }, [addGuessedLetter])
 
+  /* Handle Enter → restart game */
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      const key = e.key.toLowerCase()
-      if (key !== "Enter") return
+      if (e.key !== "Enter") return
 
       e.preventDefault()
       setGuessedLetters([])
       setWordToGuess(getWord())
     }
 
-    document.addEventListener("keypress", handler)
-    
-    return () => {
-      document.removeEventListener("keypress", handler)
-    }
-  }, [guessedLetters])
-
-
+    document.addEventListener("keydown", handler)
+    return () => document.removeEventListener("keydown", handler)
+  }, [])
 
   return (
     <div
@@ -64,20 +62,48 @@ function App() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: "2rem",
-        margin: "0 auto"
+        gap: "1.5rem",
+        margin: "0 auto 1rem",
+        padding: "1rem",
+        marginTop: "-4rem"
       }}
     >
-      <div style={{ fontSize: "2rem", textAlign: "center" }}>
-        {isWinner && "Winner! - Refresh to play again"}
-        {isLoser && "Nice try! - Refresh to try again"}
+      {/* Game status */}
+      <div style={{ fontSize: "2rem", textAlign: "center", minHeight: "3rem" }}>
+        {isWinner && "🎉 You Won!"}
+        {isLoser && "💀 Game Over"}
       </div>
-      <HangmanDrawing numberOfGuesses={inCorrectLetters.length} />
-      <HangmanWord reveal={isLoser} guessedLetters={guessedLetters} wordToGuess={wordToGuess} />
+
+
+      <HangmanDrawing numberOfGuesses={incorrectLetters.length} />
+
+      {/* Refresh word */}
+      { (
+        <div
+          style={{
+            fontSize: "1rem",
+            color: "#555",
+            marginTop: "-1rem",
+            marginBottom: "1rem",
+          }}
+        >
+          Press <b>Enter</b> to Refresh.
+        </div>
+      )}
+
+      <HangmanWord
+        reveal={isLoser}
+        isWinner={isWinner}
+        guessedLetters={guessedLetters}
+        wordToGuess={wordToGuess}
+      />
+
       <div style={{ alignSelf: "stretch" }}>
-        <Keyboard 
-          activeLetters={guessedLetters.filter(letter => wordToGuess.includes(letter))}
-          inactiveLetters={inCorrectLetters}
+        <Keyboard
+          activeLetters={guessedLetters.filter(letter =>
+            wordToGuess.includes(letter)
+          )}
+          inactiveLetters={incorrectLetters}
           addGuessedLetter={addGuessedLetter}
           disabled={isWinner || isLoser}
         />
