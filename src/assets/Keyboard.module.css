@@ -1,8 +1,8 @@
-.btn{
+.btn {
     width: 100%;
     border: 3px solid black;
     background: none;
-    aspect-ratio: 1/1;
+    aspect-ratio: 1 / 1;
     font-size: 2.5rem;
     text-transform: uppercase;
     padding: .5rem;
@@ -11,16 +11,17 @@
     color: black;
 }
 
-.btn:active{
+.active {
     background-color: hsl(200, 100%, 50%);
     color: white;
 }
 
-.btn.inactive{ 
-    opacity: .3;
+.inactive {
+    /* background-color: red; */
+    opacity: 0.3;
 }
 
-.btn:hover:not(:disabled), .btn:focus:not(:disabled){
+.btn:hover:not(:disabled),
+.btn:focus:not(:disabled) {
     background-color: hsl(200, 100%, 75%);
-
 }
