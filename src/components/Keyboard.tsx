@@ -1,17 +1,47 @@
 import styles from "../assets/Keyboard.module.css"
 
-const Keyboard = () => {
-    const KEYS = [ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ]
+type KeyboardProps = {
+    disabled?: boolean
+    activeLetters: string[]
+    inactiveLetters: string[]
+    addGuessedLetter: (letter: string) => void
+}
+
+const Keyboard = ({
+    activeLetters,
+    inactiveLetters,
+    addGuessedLetter,
+    disabled = false
+}: KeyboardProps) => {
+    const KEYS = [
+        "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
+        "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+    ]
 
     return (
-        <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(75px, 1fr))",
-            gap: ".5rem",
-        }}>
-            {KEYS.map(key => (
-                <button className={`${styles.btn}`} key={key}>{key}</button>
-            ))}
+        <div
+            style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(75px, 1fr))",
+                gap: ".5rem",
+            }}
+        >
+            {KEYS.map((key) => {
+                const isActive = activeLetters.includes(key)
+                const isInactive = inactiveLetters.includes(key)
+
+                return (
+                    <button
+                        key={key}
+                        onClick={() => addGuessedLetter(key)}
+                        className={`${styles.btn} ${isActive ? styles.active : ""
+                            } ${isInactive ? styles.inactive : ""}`}
+                        disabled={isActive || isInactive || disabled}
+                    >
+                        {key.toUpperCase()}
+                    </button>
+                )
+            })}
         </div>
     )
 }
