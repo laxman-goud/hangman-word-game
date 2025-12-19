@@ -1,36 +1,62 @@
-
 type HangmanWordProps = {
-    guessedLetters: string[],
+    guessedLetters: string[]
     wordToGuess: string
     reveal?: boolean
+    isWinner?: boolean
 }
 
-const HangmanWord = ({guessedLetters, wordToGuess, reveal = false}: HangmanWordProps) => {
-
+const HangmanWord = ({
+    guessedLetters,
+    wordToGuess,
+    reveal = false,
+    isWinner = false,
+}: HangmanWordProps) => {
     return (
         <div
             style={{
                 display: "flex",
-                gap: '.25em',
-                fontSize: "6rem",
+                flexWrap: "wrap",
+                justifyContent: "center",
+                gap: "0.4em",
+                fontSize: "clamp(2rem, 8vw, 6rem)",
                 fontWeight: "bold",
                 textTransform: "uppercase",
-                fontFamily: 'monospace',
+                fontFamily: "monospace",
+                marginTop: "-3rem",
+                marginBottom: "2rem",
+                textAlign: "center",
+                width: "99vw",
             }}
         >
-            { wordToGuess.split("").map((letter, index) => (
-                <span style={{borderBottom: ".1em solid black"}} key={index}>
-                    <span
-                        style={{
-                            visibility: guessedLetters.includes(letter) || reveal ? "visible" : "hidden",
-                            color: !guessedLetters.includes(letter) && reveal ? "red": "black"
+            {wordToGuess.split("").map((letter, index) => {
+                const isGuessed = guessedLetters.includes(letter)
 
+                return (
+                    <span
+                        key={index}
+                        style={{
+                            borderBottom: "0.1em solid black",
+                            minWidth: "1ch",
+                            display: "inline-flex",
+                            justifyContent: "center",
                         }}
                     >
-                        {letter}
+                        <span
+                            style={{
+                                visibility:
+                                    isGuessed || reveal || isWinner ? "visible" : "hidden",
+                                color: isWinner
+                                    ? "green"
+                                    : !isGuessed && reveal
+                                        ? "red"
+                                        : "black",
+                            }}
+                        >
+                            {letter}
+                        </span>
                     </span>
-                </span>
-            )) }
+                )
+            })}
         </div>
     )
 }
