@@ -1,27 +1,30 @@
+/* Base style for each keyboard button */
 .btn {
-    width: 100%;
-    border: 3px solid black;
-    background: none;
-    aspect-ratio: 1 / 1;
-    font-size: 2.5rem;
-    text-transform: uppercase;
-    padding: .5rem;
-    font-weight: bold;
-    cursor: pointer;
-    color: black;
+  width: 100%; /* Button fills grid cell */
+  border: 3px solid black; /* Bold border for visibility */
+  background: none; /* Transparent background by default */
+  aspect-ratio: 1 / 1; /* Keeps button perfectly square */
+  font-size: 2.5rem; /* Large letter size */
+  text-transform: uppercase; /* Display letters in uppercase */
+  padding: 0.5rem; /* Inner spacing */
+  font-weight: bold; /* Strong letter emphasis */
+  cursor: pointer; /* Pointer cursor on hover */
+  color: black; /* Default text color */
 }
 
+/* Applied when the letter is correctly guessed */
 .active {
-    background-color: hsl(200, 100%, 50%);
-    color: white;
+  background-color: hsl(200, 100%, 50%); /* Blue background */
+  color: white; /* White text */
 }
 
+/* Applied when the letter is incorrect */
 .inactive {
-    /* background-color: red; */
-    opacity: 0.3;
+  opacity: 0.3; /* Fade out incorrect letters */
 }
 
+/* Hover & focus effect for enabled buttons only */
 .btn:hover:not(:disabled),
 .btn:focus:not(:disabled) {
-    background-color: hsl(200, 100%, 75%);
+  background-color: hsl(200, 100%, 75%); /* Light blue hover effect */
 }
