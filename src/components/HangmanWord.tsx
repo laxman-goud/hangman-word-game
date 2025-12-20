@@ -28,6 +28,7 @@ const HangmanWord = ({
                 width: "99vw",
             }}
         >
+            {/* Render each letter of the word */}
             {wordToGuess.split("").map((letter, index) => {
                 const isGuessed = guessedLetters.includes(letter)
 
@@ -43,8 +44,11 @@ const HangmanWord = ({
                     >
                         <span
                             style={{
+                                /* Show letter if guessed, game lost, or won */
                                 visibility:
                                     isGuessed || reveal || isWinner ? "visible" : "hidden",
+
+                                /* Color logic */
                                 color: isWinner
                                     ? "green"
                                     : !isGuessed && reveal
